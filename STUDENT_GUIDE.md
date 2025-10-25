@@ -37,13 +37,61 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 步骤 4: 获取 TMDB API Key
+### 步骤 4: 获取 TMDB API Key（详细步骤）
+
+#### 4.1 注册 TMDB 账号
 
 1. 访问 [TMDB 官网](https://www.themoviedb.org/)
-2. 注册账号（免费）
-3. 进入 [API 设置页面](https://www.themoviedb.org/settings/api)
-4. 申请 API Key
-5. 复制你的 API Key
+2. 点击右上角 "Join TMDB"（加入）
+3. 填写注册信息：
+   - Username（用户名）
+   - Password（密码）
+   - Email（邮箱）
+4. 验证邮箱（检查收件箱，点击验证链接）
+
+#### 4.2 申请 API Key
+
+1. 登录后，进入 [API 设置页面](https://www.themoviedb.org/settings/api)
+2. 点击 "Request an API Key"（申请 API Key）
+3. 选择 **"Developer"**（开发者）类型
+4. 接受服务条款
+
+#### 4.3 填写申请表单
+
+**必填字段说明：**
+
+| 字段名称 | 英文名 | 如何填写 | 示例 |
+|---------|--------|---------|------|
+| 应用类型 | Application Type | 选择 "Website" | Website |
+| 应用名称 | Application Name | 你的项目名称 | TMDB Movie Search |
+| 应用简介 | Application Summary | 简单描述项目用途 | A learning project for FastAPI course |
+| 应用URL | Application URL | 可以填 localhost 或 GitHub | http://localhost:8000 |
+| 个人信息 | Personal Information | 按实际填写 | - |
+
+**推荐填写内容：**
+
+```
+Application Name（应用名称）:
+TMDB Movie Learning Project
+
+Application Summary（应用简介）:
+This is a student learning project for a FastAPI web development course. 
+The application uses TMDB API to search movies and display movie information.
+
+Application URL（应用网址）:
+http://localhost:8000
+或
+https://github.com/[你的用户名]/tmdb_movie_sourse
+```
+
+#### 4.4 获取 API Key
+
+1. 提交表单后，会立即生成 API Key
+2. 找到 **"API Key (v3 auth)"** 部分
+3. 复制这个32位的密钥（类似：`a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6`）
+4. **保密！** 不要分享给他人或提交到 GitHub
+
+> 💡 **提示：** 整个申请过程约 2-5 分钟，完全免费！
 
 ### 步骤 5: 配置 API Key
 
@@ -77,16 +125,30 @@ python main.py
    cd lesson1
    uvicorn step1_hello_fastapi:app --reload
    ```
+   访问: http://127.0.0.1:8000/docs
 
-2. **step2_basic_api.py** - 基础 API 开发
+2. **step2_basic_api.py** - 基础 API 开发（CRUD操作）
    ```bash
    uvicorn step2_basic_api:app --reload
    ```
+   访问: http://127.0.0.1:8000/docs
 
-3. **step3_douban_api.py** - TMDB API 集成
+3. **step3_tmdb_api.py** - TMDB API 集成（真实数据）
+   
+   **方式1：使用模拟数据（无需 API Key）**
    ```bash
-   uvicorn step3_douban_api:app --reload
+   python step3_tmdb_api.py
    ```
+   
+   **方式2：使用真实 API（需要 API Key）**
+   ```bash
+   # 先创建 .env 文件
+   cp .env.example .env
+   # 编辑 .env，填入 API Key
+   # 然后运行
+   python step3_tmdb_api.py
+   ```
+   访问: http://127.0.0.1:8000/docs
 
 ### 第二节课 - 完整 Web 应用
 
@@ -137,6 +199,31 @@ python main.py  # 会读取 .env 中的配置
 如果遇到 PowerShell 执行策略问题：
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Q5: 如何保护 API Key？
+
+**重要安全提示：**
+
+❌ **不要做：**
+- 不要将 API Key 直接写在代码中
+- 不要将 `.env` 文件提交到 GitHub
+- 不要在公开场合分享你的 API Key
+- 不要截图包含 API Key 的内容
+
+✅ **应该做：**
+- 使用 `.env` 文件存储 API Key
+- 确保 `.env` 在 `.gitignore` 中
+- 使用 `.env.example` 作为模板（不包含真实 Key）
+- 如果泄露，立即在 TMDB 网站重新生成新的 Key
+
+**检查是否安全：**
+```bash
+# 查看 .gitignore 是否包含 .env
+cat .gitignore | grep .env
+
+# 确保 .env 没有被 Git 追踪
+git status  # 不应该看到 .env 文件
 ```
 
 ## 📚 学习资源

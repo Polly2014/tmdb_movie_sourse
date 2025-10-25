@@ -251,9 +251,8 @@ git status  # 不应该看到 .env 文件
 
 ## 🆘 获取帮助
 
-- 📧 邮件: [教师邮箱]
-- 💬 讨论区: [课程讨论区链接]
-- 🐛 问题反馈: [GitHub Issues](https://github.com/Polly2014/tmdb_movie_sourse/issues)
+- 📧 邮件: baoli.wang@microsoft.com
+- 💬 讨论区: [GitHub Issues](https://github.com/Polly2014/tmdb_movie_sourse/issues)
 
 ## 🎉 完成课程后
 

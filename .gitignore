@@ -1,0 +1,56 @@
+# 忽略虚拟环境目录
+venv/
+.venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 开发工具
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 日志和数据库
+*.log
+*.sqlite
+*.db
+
+# 环境变量
+.env
+.env.local
+
+# 分发和打包
+dist/
+build/
+*.egg-info/
+
+# Poetry
+poetry.lock
+
+# pytest
+.pytest_cache/
+.coverage
+
+# Jupyter
+.ipynb_checkpoints/
+
+# mypy
+.mypy_cache/
+
+# 个人笔记和临时文档（不上传）
+PPT_OUTLINE.md
+BUGFIX_*.md
+PROJECT_CHECKLIST.md
+TMDB_API_集成方案.md

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container">
+            <h1>🎬 TMDB 电影搜索系统</h1>
+            <nav class="nav">
+                <button class="nav-btn active" data-tab="search">搜索</button>
+                <button class="nav-btn" data-tab="top250">热门</button>
+                <button class="nav-btn" data-tab="theaters">热映</button>
+                <button class="nav-btn" data-tab="favorites">收藏</button>
+                <button class="nav-btn" data-tab="stats">统计</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container">
+        <!-- 搜索标签页 -->
+        <div id="search-tab" class="tab-content active">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="搜索电影、导演、演员..."
+                    autocomplete="off"
+                >
+                <button id="search-btn">🔍 搜索</button>
+            </div>
+            
+            <div id="search-tips" class="tips">
+                💡 试试搜索：肖申克的救赎、周星驰、宫崎骏...
+            </div>
+
+            <div id="search-results" class="movie-grid"></div>
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>加载中...</p>
+            </div>
+        </div>
+
+        <!-- Top250标签页 -->
+        <div id="top250-tab" class="tab-content">
+            <div class="page-header">
+                <h2>TMDB 热门电影</h2>
+                <p class="subtitle">全球热门影片</p>
+            </div>
+            <div id="top250-results" class="movie-grid"></div>
+            <div class="pagination">
+                <button id="top250-prev" disabled>上一页</button>
+                <span id="top250-page-info">第 1 页</span>
+                <button id="top250-next">下一页</button>
+            </div>
+        </div>
+
+        <!-- 热映标签页 -->
+        <div id="theaters-tab" class="tab-content">
+            <div class="page-header">
+                <h2>正在热映</h2>
+                <div class="city-selector">
+                    <label>选择城市：</label>
+                    <select id="city-select">
+                        <option value="北京">北京</option>
+                        <option value="上海">上海</option>
+                        <option value="广州">广州</option>
+                        <option value="深圳">深圳</option>
+                        <option value="杭州">杭州</option>
+                        <option value="成都">成都</option>
+                    </select>
+                </div>
+            </div>
+            <div id="theaters-results" class="movie-grid"></div>
+            
+            <div class="page-header" style="margin-top: 3rem;">
+                <h2>即将上映</h2>
+            </div>
+            <div id="coming-results" class="movie-grid"></div>
+        </div>
+
+        <!-- 收藏标签页 -->
+        <div id="favorites-tab" class="tab-content">
+            <div class="page-header">
+                <h2>我的收藏</h2>
+                <div class="sort-selector">
+                    <label>排序：</label>
+                    <select id="favorites-sort">
+                        <option value="added_at">收藏时间</option>
+                        <option value="rating">评分</option>
+                        <option value="year">年份</option>
+                    </select>
+                </div>
+            </div>
+            <div id="favorites-results" class="movie-grid"></div>
+            <div id="empty-favorites" class="empty-state" style="display: none;">
+                <p>📭 还没有收藏任何电影</p>
+                <p>快去搜索你喜欢的电影吧！</p>
+            </div>
+        </div>
+
+        <!-- 统计标签页 -->
+        <div id="stats-tab" class="tab-content">
+            <div class="page-header">
+                <h2>数据统计</h2>
+            </div>
+            <div id="stats-content" class="stats-grid"></div>
+        </div>
+    </main>
+
+    <!-- 电影详情弹窗 -->
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="movie-detail"></div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>© {{ current_year }} TMDB 电影搜索系统 | FastAPI实战教学项目</p>
+            <p class="footer-note">数据来源于 <a href="https://www.themoviedb.org" target="_blank" style="color: #01b4e4; text-decoration: none;">The Movie Database (TMDB)</a></p>
+            <p class="footer-note" style="font-size: 12px; margin-top: 5px;">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+        </div>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

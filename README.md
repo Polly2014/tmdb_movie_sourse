@@ -8,7 +8,7 @@
 **技术栈：** FastAPI + TMDB API + Python + HTML/JavaScript  
 **目标学生：** 有Python基础的大学生
 
-> 📖 **关于 TMDB**: [The Movie Database (TMDB)](https://www.themoviedb.org/) 是一个开放的电影数据库，提供免费的 API 访问。
+> 📖 **关于 TMDB**: [The Movie Database (TMDB)](https://www.themoviedb.org/) 是全球最受欢迎的开放电影数据库，提供免费的API访问，支持中文数据。相比豆瓣API，TMDB提供更稳定的服务和更丰富的电影信息。
 
 ---
 
@@ -31,16 +31,21 @@
 ## 📂 项目结构
 
 ```
-douban_movie_course/
+tmdb_movie_sourse/
 ├── README.md                 # 项目说明
+├── SETUP.md                  # 环境搭建指南
+├── STUDENT_GUIDE.md          # 学生使用指南
 ├── requirements.txt          # 依赖包列表
+├── .env.example              # 环境变量模板
 ├── lesson1/                  # 第一节课内容
 │   ├── step1_hello_fastapi.py
 │   ├── step2_basic_api.py
-│   ├── step3_douban_api.py
+│   ├── step3_tmdb_api.py    # TMDB API调用示例
 │   └── exercises.md
 ├── lesson2/                  # 第二节课内容
-│   ├── main.py              # 完整应用
+│   ├── main.py              # 完整应用（支持真实API和模拟数据）
+│   ├── config.py            # 配置管理
+│   ├── .env.example         # 环境变量模板
 │   ├── templates/           # HTML模板
 │   │   └── index.html
 │   └── static/              # 静态资源
@@ -66,7 +71,20 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. 运行第一节课示例
+### 2. 配置 API Key（可选）
+
+```bash
+# 复制环境变量模板
+cd lesson2
+cp .env.example .env
+
+# 编辑 .env 文件，添加你的 TMDB API Key
+# 如果没有API Key，系统会自动使用模拟数据
+```
+
+> 💡 **获取 TMDB API Key**: 访问 [TMDB API](https://www.themoviedb.org/settings/api) 免费申请
+
+### 3. 运行第一节课示例
 
 ```bash
 cd lesson1
@@ -75,14 +93,20 @@ uvicorn step1_hello_fastapi:app --reload
 
 访问：http://127.0.0.1:8000
 
-### 3. 运行完整项目
+### 4. 运行完整项目
 
 ```bash
 cd lesson2
+python main.py
+# 或者
 uvicorn main:app --reload
 ```
 
 访问：http://127.0.0.1:8000
+
+> ⚙️ **切换模式**: 
+> - 真实API模式: 在 `.env` 中设置 `USE_MOCK_DATA=False`
+> - 模拟数据模式: 在 `.env` 中设置 `USE_MOCK_DATA=True`
 
 ---
 
@@ -94,15 +118,17 @@ uvicorn main:app --reload
 - 10分钟：课程介绍 + 环境准备
 - 20分钟：FastAPI入门（step1）
 - 20分钟：构建基本API（step2）
-- 30分钟：集成豆瓣API（step3）
+- 30分钟：集成TMDB API（step3）
 - 10分钟：练习和答疑
 
 **核心知识点：**
 - HTTP请求方法（GET/POST）
 - RESTful API设计
 - 路径参数和查询参数
-- 异步编程基础
-- 第三方API调用
+- 异步编程基础（async/await）
+- 第三方API调用（TMDB API）
+- API认证（API Key管理）
+- 环境变量配置
 
 ### 第二节课（90分钟）
 
@@ -114,28 +140,33 @@ uvicorn main:app --reload
 - 10分钟：总结和扩展方向
 
 **核心知识点：**
-- 模板渲染
-- 前后端交互
+- Jinja2模板渲染
+- 前后端交互（AJAX）
 - 数据持久化（简单版）
-- 错误处理
-- 项目部署
+- 错误处理和异常管理
+- 配置管理（环境变量）
+- 项目部署准备
 
 ---
 
 ## 🌟 项目特色
 
 1. **渐进式教学**：从最简单的Hello World到完整应用
-2. **实用性强**：使用真实的豆瓣电影数据
-3. **现代技术**：FastAPI的自动API文档、类型提示
-4. **可扩展**：提供多个扩展方向供学生探索
+2. **双模式支持**：支持真实TMDB API和模拟数据，无需API Key也能学习
+3. **实用性强**：使用真实的TMDB电影数据，支持中文
+4. **现代技术**：FastAPI自动API文档、类型提示、异步编程
+5. **安全第一**：环境变量管理API Key，代码不包含敏感信息
+6. **可扩展**：提供多个扩展方向供学生探索
 
 ---
 
 ## 🔗 相关资源
 
 - [FastAPI官方文档](https://fastapi.tiangolo.com/)
-- [豆瓣API文档](https://douban-api-docs.zce.me/)
+- [TMDB API文档](https://developers.themoviedb.org/3)
+- [TMDB官网](https://www.themoviedb.org/)
 - [Python异步编程教程](https://docs.python.org/zh-cn/3/library/asyncio.html)
+- [Pydantic文档](https://docs.pydantic.dev/)
 
 ---
 
@@ -156,10 +187,28 @@ uvicorn main:app --reload
 
 ## 👨‍🏫 教师备注
 
-- 提前测试所有代码
-- 准备好豆瓣API备用方案
-- 建议使用GitHub分享代码
-- 鼓励学生提问和尝试
+- ✅ 提前测试所有代码
+- ✅ 无需API Key也能演示（自动使用模拟数据）
+- ✅ 建议学生申请自己的TMDB API Key（免费）
+- ✅ 使用GitHub分享代码
+- ✅ 强调API Key安全性（不要提交到GitHub）
+- ✅ 鼓励学生提问和尝试
+
+## 🔒 安全提醒
+
+**重要：** 
+- ❌ 不要将 `.env` 文件提交到Git
+- ❌ 不要在代码中硬编码API Key
+- ✅ 使用 `.env.example` 作为模板
+- ✅ 在 `.gitignore` 中排除 `.env` 文件
+
+## 🤝 贡献
+
+欢迎提交Issue和Pull Request！
+
+## 📄 许可证
+
+MIT License
 
 ---
 

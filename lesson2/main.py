@@ -112,44 +112,85 @@ def parse_movie_data(data: dict) -> MovieInfo:
         raise
 
 def get_mock_data(endpoint: str, params: dict = None) -> dict:
-    """生成模拟数据"""
+    """生成模拟数据 - 返回 TMDB API 格式"""
     params = params or {}
     
+    # 将模拟数据转换为TMDB格式
+    def convert_to_tmdb_format(mock_movie: dict) -> dict:
+        """将模拟数据转换为TMDB API格式"""
+        return {
+            "id": int(mock_movie["id"]) if mock_movie["id"].isdigit() else 1,
+            "title": mock_movie["title"],
+            "original_title": mock_movie["title"],
+            "release_date": f"{mock_movie['year']}-01-01",
+            "vote_average": mock_movie["rating"],
+            "vote_count": 10000,
+            "poster_path": "/mock_poster.jpg",
+            "overview": f"这是{mock_movie['title']}的精彩剧情介绍...",
+            "genre_ids": [18, 80] if "剧情" in mock_movie.get("genres", []) else [28, 12],
+            "genres": [{"id": i, "name": g} for i, g in enumerate(mock_movie.get("genres", []))],
+        }
+    
     if "search" in endpoint:
-        keyword = params.get('q', '').lower()
+        # 搜索电影: /search/movie
+        keyword = params.get('query', '').lower()
         results = [m for m in MOCK_TOP_MOVIES if keyword in m['title'].lower()]
-        start = params.get('start', 0)
-        count = min(params.get('count', 20), len(results) - start)
         return {
-            'subjects': results[start:start + count],
-            'start': start,
-            'count': count,
-            'total': len(results)
+            'results': [convert_to_tmdb_format(m) for m in results[:20]],
+            'page': params.get('page', 1),
+            'total_results': len(results),
+            'total_pages': (len(results) + 19) // 20
         }
-    elif "top250" in endpoint:
-        start = params.get('start', 0)
-        count = min(params.get('count', 20), len(MOCK_TOP_MOVIES) - start)
+    elif "popular" in endpoint or "top" in endpoint:
+        # 热门电影: /movie/popular
+        page = params.get('page', 1)
+        start = (page - 1) * 20
+        count = min(20, len(MOCK_TOP_MOVIES) - start)
         return {
-            'subjects': MOCK_TOP_MOVIES[start:start + count],
-            'start': start,
-            'count': count,
-            'total': len(MOCK_TOP_MOVIES)
+            'results': [convert_to_tmdb_format(m) for m in MOCK_TOP_MOVIES[start:start + count]],
+            'page': page,
+            'total_results': len(MOCK_TOP_MOVIES),
+            'total_pages': (len(MOCK_TOP_MOVIES) + 19) // 20
         }
-    elif "in_theaters" in endpoint or "coming_soon" in endpoint:
-        count = min(params.get('count', 10), len(MOCK_TOP_MOVIES))
+    elif "now_playing" in endpoint or "upcoming" in endpoint:
+        # 正在上映/即将上映: /movie/now_playing, /movie/upcoming
         return {
-            'subjects': MOCK_TOP_MOVIES[:count],
-            'count': count,
-            'total': count
+            'results': [convert_to_tmdb_format(m) for m in MOCK_TOP_MOVIES[:20]],
+            'page': 1,
+            'total_results': 20,
+            'total_pages': 1
         }
-    elif "subject" in endpoint:
+    elif "movie/" in endpoint and endpoint.split('/')[-1].isdigit():
+        # 电影详情: /movie/{id}
         movie_id = endpoint.split('/')[-1]
         for movie in MOCK_TOP_MOVIES:
             if str(movie['id']) == str(movie_id):
-                return movie
-        return MOCK_TOP_MOVIES[0]
+                tmdb_movie = convert_to_tmdb_format(movie)
+                # 添加详情页需要的额外信息
+                tmdb_movie.update({
+                    "runtime": 120,
+                    "production_countries": [{"name": "美国"}],
+                    "spoken_languages": [{"english_name": "English"}],
+                    "credits": {
+                        "cast": [{"name": f"演员{i}"} for i in range(1, 6)],
+                        "crew": [{"name": "导演张三", "job": "Director"}]
+                    }
+                })
+                return tmdb_movie
+        # 默认返回第一个电影
+        default = convert_to_tmdb_format(MOCK_TOP_MOVIES[0])
+        default.update({
+            "runtime": 120,
+            "production_countries": [{"name": "美国"}],
+            "spoken_languages": [{"english_name": "English"}],
+            "credits": {
+                "cast": [{"name": f"演员{i}"} for i in range(1, 6)],
+                "crew": [{"name": "导演张三", "job": "Director"}]
+            }
+        })
+        return default
     
-    return {'subjects': [], 'count': 0, 'total': 0}
+    return {'results': [], 'page': 1, 'total_results': 0, 'total_pages': 0}
 
 
 async def fetch_from_tmdb(endpoint: str, params: dict = None) -> dict:
